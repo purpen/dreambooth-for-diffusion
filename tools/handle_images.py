@@ -61,7 +61,10 @@ if __name__ == '__main__':
         print('Processing image: %s' % file)
         try:
             img = cv2.imread(file, -1)
-            
+            if img is None:
+                continue
+
+            file_name = os.path.splitext(file.split('/')[-1])[0]
             # 对图像进行center crop, 保证图像的长宽比为1:1, crop_size为图像的较短边
             crop_size = min(img.shape[:2])
             img = center_crop(img, (crop_size, crop_size))
@@ -75,7 +78,7 @@ if __name__ == '__main__':
             if args.png:
                 img = transparence2black(img)
                 
-            cv2.imwrite(os.path.join(save_path, str(i).zfill(4) + ".jpg"), img)
+            cv2.imwrite(os.path.join(save_path, file_name + ".jpg"), img)  # str(i).zfill(4)
         except Exception as e:
             print(e)
             os.remove(path+file) # 删除无效图片
